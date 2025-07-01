@@ -148,5 +148,7 @@ export function getPresetsByCategory(category: string): SDEPreset[] {
 }
 
 export function getCategories(): string[] {
-  return [...new Set(presets.map(p => p.category))];
+  const categories = new Set<string>();
+  presets.forEach(p => categories.add(p.category));
+  return Array.from(categories);
 }
