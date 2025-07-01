@@ -49,8 +49,27 @@ export default function Home() {
 
   const handleSubmit = (params: SDEParameters, sdeType: string) => {
     try {
+      // Validate parameters
+      if (isNaN(params.mu) || isNaN(params.sigma) || isNaN(params.X0) || 
+          isNaN(params.T) || isNaN(params.steps) || params.steps <= 0 || params.T <= 0) {
+        alert('Please enter valid numerical parameters');
+        return;
+      }
+      
+      // For Ornstein-Uhlenbeck, check theta
+      if (sdeType === 'ou' && (isNaN(params.theta!) || params.theta! <= 0)) {
+        alert('Please enter a valid positive value for theta (θ)');
+        return;
+      }
+      
       const sde = createSDE(sdeType, params);
       const result = eulerMaruyama(sde);
+      
+      // Check if result is valid
+      if (!result || !result.values || result.values.some(v => !isFinite(v))) {
+        throw new Error('Numerical instability detected in solution');
+      }
+      
       setSolution(result);
       setSdeInfo({
         name: sde.getName(),
@@ -62,7 +81,7 @@ export default function Home() {
       setShowSliders(true);
     } catch (error) {
       console.error('Error solving SDE:', error);
-      alert('Error solving SDE. Please check your parameters.');
+      alert(`Error solving SDE: ${error instanceof Error ? error.message : 'Please check your parameters'}`);
     }
   };
 

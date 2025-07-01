@@ -33,8 +33,26 @@ export function eulerMaruyama(
     const t = i * dt;
     const X = values[i];
     
+    // Check for numerical issues
+    if (!isFinite(X)) {
+      console.error(`Numerical overflow at step ${i}, X = ${X}`);
+      // Fill remaining values with last valid value
+      for (let j = i + 1; j <= steps; j++) {
+        values[j] = values[i - 1] || X0;
+        time[j] = j * dt;
+      }
+      break;
+    }
+    
     // X_{t+dt} = X_t + μ(X_t, t) * dt + σ(X_t, t) * dW_t
-    values[i + 1] = X + sde.drift(X, t) * dt + sde.diffusion(X, t) * dW[i];
+    const drift = sde.drift(X, t);
+    const diffusion = sde.diffusion(X, t);
+    
+    // Clamp extreme values to prevent overflow
+    const driftTerm = Math.max(-1000, Math.min(1000, drift * dt));
+    const diffusionTerm = Math.max(-1000, Math.min(1000, diffusion * dW[i]));
+    
+    values[i + 1] = X + driftTerm + diffusionTerm;
     time[i + 1] = (i + 1) * dt;
   }
   

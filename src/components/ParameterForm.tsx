@@ -24,10 +24,13 @@ export default function ParameterForm({ onSubmit }: ParameterFormProps) {
   };
 
   const handleChange = (field: keyof SDEParameters, value: string) => {
-    setParams(prev => ({
-      ...prev,
-      [field]: parseFloat(value)
-    }));
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      setParams(prev => ({
+        ...prev,
+        [field]: numValue
+      }));
+    }
   };
 
   return (
