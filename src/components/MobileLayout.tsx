@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 interface MobileLayoutProps {
-  children: React.ReactNode;
   sidebar: React.ReactNode;
   main: React.ReactNode;
 }
