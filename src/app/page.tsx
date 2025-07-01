@@ -8,7 +8,7 @@ import StatisticsDisplay from '@/components/StatisticsDisplay';
 import ParameterSliders from '@/components/ParameterSliders';
 import ExportOptions from '@/components/ExportOptions';
 import PresetTemplates from '@/components/PresetTemplates';
-import EquationDisplay from '@/components/EquationDisplay';
+import SafeEquationDisplay from '@/components/SafeEquationDisplay';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import MobileLayout from '@/components/MobileLayout';
@@ -221,7 +221,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-4 dark:text-white">Visualization</h2>
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
               <h3 className="font-medium text-lg mb-2 dark:text-white">{sdeInfo.name}</h3>
-              <EquationDisplay equation={sdeInfo.latex} />
+              <SafeEquationDisplay equation={sdeInfo.latex} />
             </div>
             <div ref={chartRef}>
               <Suspense fallback={<ChartSkeleton />}>

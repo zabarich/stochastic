@@ -44,10 +44,23 @@ export default function EquationDisplay({ equation, className = '' }: EquationDi
 
   const renderEquation = () => {
     if (containerRef.current && window.MathJax) {
-      containerRef.current.innerHTML = `$$${equation}$$`;
-      window.MathJax.typesetPromise([containerRef.current]).catch((e: any) => {
-        console.error('MathJax rendering error:', e);
-      });
+      try {
+        containerRef.current.innerHTML = `$$${equation}$$`;
+        // Check if typesetPromise exists
+        if (window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([containerRef.current]).catch((e: any) => {
+            console.error('MathJax rendering error:', e);
+          });
+        } else if (window.MathJax.typeset) {
+          // Fallback for older MathJax versions
+          window.MathJax.typeset([containerRef.current]);
+        } else if (window.MathJax.Hub && window.MathJax.Hub.Queue) {
+          // MathJax v2 fallback
+          window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, containerRef.current]);
+        }
+      } catch (error) {
+        console.error('Error rendering equation:', error);
+      }
     }
   };
 
