@@ -20,6 +20,9 @@ export const metadata: Metadata = {
     description: 'Solve and visualize SDEs with Monte Carlo simulations',
   },
   manifest: '/manifest.json',
+}
+
+export const viewport = {
   themeColor: '#3b82f6',
 }
 
